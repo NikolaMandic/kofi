@@ -23,17 +23,13 @@ class A {
   has $.file is rw;
   has $.temp is rw;
   method url($url){
-    say $url;
     $!temp =  slurponline($url);
   }
   method file($path){
-    say "$path";
     $!temp=($path.IO.slurp);
   }
   method traitsource($traitsource) {
-    say "temp $!temp";
     spurt($!file, $!temp, :append);
-    say "source";
   }
   method traitname($traitname) {
       say "word $traitname";
