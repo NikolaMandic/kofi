@@ -1,1 +1,18 @@
-kofi source result
+DEPS
+=============
+latest perl6
+git clone https://github.com/tadzik/rakudobrew ~/.rakudobrew
+echo 'export PATH=~/.rakudobrew/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+rakudobrew build moar
+rakudobrew build-panda
+panda install Task::Star
+
+sudo apt-get install libssl-dev
+
+panda install IO::Socket::SSL
+panda install Net::HTTP
+
+USAGE
+=====================
+./kofi source result
