@@ -15,4 +15,10 @@ panda install Net::HTTP
 
 USAGE
 =====================
+create source file like so
+  1 securityonion securityonion.trait
+  2 openssh ssh.trait
+  3 xvfbuf https://raw.githubusercontent.com/samgiles/docker-xvfb/master/Dockerfile
+
+this will take these 3 files and combine it into one docker file
 ./kofi source result
