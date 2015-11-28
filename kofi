@@ -2,25 +2,45 @@
 use v6;
 
 grammar X {
-  token traitsource { <-[\n]>+ }
+
+  token url { \w+\:\/\/<-[\n]>+  }
+  token file { <-[:\n]>+ }
+  token traitsource { <file> | <url> }
   token traitname { \w+ }
   token ws { <!ww> \h* }
   token separator { <ws> }
-  rule trait { <traitname><separator><traitsource> \n? }
+  rule trait { <traitname><separator><traitsource> \n }
   rule TOP  { \s*<trait>+ }
 }
+sub slurponline($url){
 
+  use Net::HTTP::GET;
+  my %header   = :Connection<keep-alive>;
+  my $response = Net::HTTP::GET("$url", :%header);
+  $response.content;
+}
 class A {
   has $.file is rw;
-
+  has $.temp is rw;
+  method url($url){
+    say $url;
+    $!temp =  slurponline($url);
+  }
+  method file($path){
+    say "$path";
+    $!temp=($path.IO.slurp);
+  }
   method traitsource($traitsource) {
-    spurt $.file, ($traitsource.IO.slurp) ~ "\n", :append;
+    say "temp $!temp";
+    spurt($!file, $!temp, :append);
+    say "source";
   }
   method traitname($traitname) {
       say "word $traitname";
 
   }
 };
+
 
 my $source= shift @*ARGS;
 my $destination = shift @*ARGS;
