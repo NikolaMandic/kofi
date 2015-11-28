@@ -1,0 +1,40 @@
+#!/usr/bin/env perl6
+use v6;
+
+grammar X {
+  token traitsource { <-[\n]>+ }
+  token traitname { \w+ }
+  token ws { <!ww> \h* }
+  token separator { <ws> }
+  rule trait { <traitname><separator><traitsource> \n? }
+  rule TOP  { \s*<trait>+ }
+}
+
+class A {
+  has $.file is rw;
+
+  method traitsource($traitsource) {
+    spurt $.file, ($traitsource.IO.slurp) ~ "\n", :append;
+  }
+  method traitname($traitname) {
+      say "word $traitname";
+
+  }
+};
+
+my $source= shift @*ARGS;
+my $destination = shift @*ARGS;
+spurt $destination, "";
+my $a = A.new(file => $destination);
+
+try X.parse($source.IO.slurp, :actions($a));
+
+if $! {
+    say "Parse failed: ", $!.message;
+}
+elsif $/ {
+    say $();
+}
+else {
+    say "Parse failed.";
+}
